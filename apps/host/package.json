@@ -1,0 +1,7 @@
+{
+    "name": "shell",
+    "version": "0.0.1",
+    "devDependencies": {
+        "@angular-devkit/build-angular": "^18.1.4"
+    }
+}

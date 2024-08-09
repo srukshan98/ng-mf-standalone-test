@@ -1,6 +1,11 @@
 {
   "name": "mfe-test-001",
   "version": "0.0.0",
+  "workspaces": [
+    "apps/*",
+    "remotes/*",
+    "libs/*"
+  ],
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
