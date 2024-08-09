@@ -1,38 +1,160 @@
 {
-  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-  "version": 1,
-  "newProjectRoot": "projects",
-  "projects": {
-    "host": {
+	"$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+	"version": 1,
+	"newProjectRoot": "projects",
+	"projects": {
+		"host": {
+			"projectType": "application",
+			"schematics": {
+				"@schematics/angular:component": {
+					"style": "scss"
+				}
+			},
+			"root": "apps/host",
+			"sourceRoot": "apps/host/src",
+			"prefix": "app",
+			"architect": {
+				"build": {
+					"builder": "@angular-architects/native-federation:build",
+					"options": {},
+					"configurations": {
+						"production": {
+							"target": "host:esbuild:production"
+						},
+						"development": {
+							"target": "host:esbuild:development",
+							"dev": true
+						}
+					},
+					"defaultConfiguration": "production"
+				},
+				"serve": {
+					"builder": "@angular-architects/native-federation:build",
+					"options": {
+						"target": "host:serve-original:development",
+						"rebuildDelay": 0,
+						"dev": true,
+						"port": 0
+					}
+				},
+				"extract-i18n": {
+					"builder": "@angular-devkit/build-angular:extract-i18n"
+				},
+				"test": {
+					"builder": "@angular-devkit/build-angular:karma",
+					"options": {
+						"polyfills": [
+							"zone.js",
+							"zone.js/testing"
+						],
+						"tsConfig": "apps/host/tsconfig.spec.json",
+						"inlineStyleLanguage": "scss",
+						"assets": [
+							{
+								"glob": "**/*",
+								"input": "apps/host/public"
+							}
+						],
+						"styles": [
+							"apps/host/src/styles.scss"
+						],
+						"scripts": []
+					}
+				},
+				"esbuild": {
+					"builder": "@angular-devkit/build-angular:application",
+					"options": {
+						"outputPath": "dist/host",
+						"index": "apps/host/src/index.html",
+						"browser": "apps/host/src/main.ts",
+						"polyfills": [
+							"zone.js",
+							"es-module-shims"
+						],
+						"tsConfig": "apps/host/tsconfig.app.json",
+						"inlineStyleLanguage": "scss",
+						"assets": [
+							{
+								"glob": "**/*",
+								"input": "apps/host/public"
+							}
+						],
+						"styles": [
+							"apps/host/src/styles.scss"
+						],
+						"scripts": []
+					},
+					"configurations": {
+						"production": {
+							"budgets": [
+								{
+									"type": "initial",
+									"maximumWarning": "500kB",
+									"maximumError": "1MB"
+								},
+								{
+									"type": "anyComponentStyle",
+									"maximumWarning": "2kB",
+									"maximumError": "4kB"
+								}
+							],
+							"outputHashing": "all"
+						},
+						"development": {
+							"optimization": false,
+							"extractLicenses": false,
+							"sourceMap": true
+						}
+					},
+					"defaultConfiguration": "production"
+				},
+				"serve-original": {
+					"builder": "@angular-devkit/build-angular:dev-server",
+					"configurations": {
+						"production": {
+							"buildTarget": "host:esbuild:production"
+						},
+						"development": {
+							"buildTarget": "host:esbuild:development"
+						}
+					},
+					"defaultConfiguration": "development",
+					"options": {
+						"port": 4200
+					}
+				}
+			}
+    },
+    "layout": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
           "style": "scss"
         }
       },
-      "root": "apps/host",
-      "sourceRoot": "apps/host/src",
+      "root": "remotes/layout",
+      "sourceRoot": "remotes/layout/src",
       "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/host",
-            "index": "apps/host/src/index.html",
-            "browser": "apps/host/src/main.ts",
+            "outputPath": "dist/layout",
+            "index": "remotes/layout/src/index.html",
+            "browser": "remotes/layout/src/main.ts",
             "polyfills": [
               "zone.js"
             ],
-            "tsConfig": "apps/host/tsconfig.app.json",
+            "tsConfig": "remotes/layout/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
               {
                 "glob": "**/*",
-                "input": "apps/host/public"
+                "input": "remotes/layout/public"
               }
             ],
             "styles": [
-              "apps/host/src/styles.scss"
+              "remotes/layout/src/styles.scss"
             ],
             "scripts": []
           },
@@ -64,10 +186,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "host:build:production"
+              "buildTarget": "layout:build:production"
             },
             "development": {
-              "buildTarget": "host:build:development"
+              "buildTarget": "layout:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -82,21 +204,21 @@
               "zone.js",
               "zone.js/testing"
             ],
-            "tsConfig": "apps/host/tsconfig.spec.json",
+            "tsConfig": "remotes/layout/tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
             "assets": [
               {
                 "glob": "**/*",
-                "input": "apps/host/public"
+                "input": "remotes/layout/public"
               }
             ],
             "styles": [
-              "apps/host/src/styles.scss"
+              "remotes/layout/src/styles.scss"
             ],
             "scripts": []
           }
         }
       }
     }
-  }
+	}
 }
